@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Investment Calculator</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+	<h1>Investment Adjusted Return Calculator</h1>
+	<form>
+		<label for="total-return">Total Return (%):</label>
+		<input type="number" id="total-return" name="total-return" step="0.01"><br><br>
+		<label for="inflation-rate">Inflation Rate (%):</label>
+		<input type="number" id="inflation-rate" name="inflation-rate" step="0.01"><br><br>
+		<button type="button" onclick="calculateAdjustedReturn()">Calculate Adjusted Return</button><br><br>
+		<label for="adjusted-return">Investment Adjusted Return (%):</label>
+		<input type="text" id="adjusted-return" name="adjusted-return" readonly>
+	</form>
+
+	<h1>Compounding Interest Calculator</h1>
+
+	<form>
+		<label for="investment">Investment Amount:</label>
+		<input type="text" id="investment" name="investment" onkeyup="formatNumber(this)" required><br><br>
+
+		<label for="rate">Annual Interest Rate:</label>
+		<input type="number" id="rate" name="rate" required><span>%</span><br><br>
+
+		<label for="years">Number of Years:</label>
+		<input type="number" id="years" name="years" required><br><br>
+
+		<button type="button" onclick="calculate()">Calculate</button><br><br>
+
+		<label for="result">Future Value:</label>
+		<input type="text" id="result" name="result" readonly><br><br>
+
+		<label for="percent-change">Percentage Change:</label>
+		<input type="text" id="percent-change" name="percent-change" readonly>
+	</form>
+
+	<h1>Mean Calculator</h1>
+
+	<form>
+		<div id="nilai-container">
+			<label for="nilai1">Nilai 1:</label>
+			<input type="text" id="nilai1" name="nilai1" onkeyup="formatNumber(this)"><br><br>
+
+			<label for="nilai2">Nilai 2:</label>
+			<input type="text" id="nilai2" name="nilai2" onkeyup="formatNumber(this)"><br><br>
+		</div>
+
+		<button type="button" onclick="tambahNilai()">Tambah Nilai</button>
+		<button type="button" onclick="hapusNilai()">Hapus Nilai</button>
+		<button type="button" onclick="hitungRata()">Hitung Rata-rata</button><br><br>
+
+		<label for="hasil">Hasil:</label>
+		<input type="text" id="hasil" name="hasil" readonly><br><br>
+	</form>
+
+	<p><strong>Keterangan:</strong> Kalkulator ini diciptakan untuk menghitung keuntungan investasi setelah terkena inflasi. Beberapa hal yang perlu diperhatikan:</p>
+	<ol>
+		<li>Jika Anda menghitung investasi dalam beberapa tahun, pastikan TOTAL RETURN dan INFLATION RATE sesuai dengan periode waktu yang diinginkan.</li>
+		<li>Untuk menghitung INFLATION RATE dalam beberapa tahun, Anda perlu mencari total inflasi dengan menghitung rata-rata (MEAN) dari data inflasi tahunan. Misalnya, jika Anda menginvestasikan uang dari tahun 2010-2022, Anda perlu mencari rata-rata inflasi dari tahun 2011-2022. Selanjutnya, Anda dapat menggunakan kalkulator compounding interest untuk menghitung total inflasinya. Hasil MEAN tersebut dapat dimasukkan sebagai ANNUAL INTEREST RATE. Pastikan memasukkan nilai negatif (-) untuk mengindikasikan pengurangan uang akibat inflasi. Untuk investment amount, Anda dapat memberikan nilai sesuai keinginan Anda, karena pada konsepnya mencari total inflasi adalah dengan mensimulasikan/menghitung uang jika terkena inflasi bertahap. Misalnya, jika ada uang 100 yang terkena inflasi 5%, maka uang tersebut akan berkurang. Uang yang sudah berkurang akan dikurangi lagi dengan inflasi tahun berikutnya, dan begitu seterusnya.</li>
+	</ol>
+
+	<script>
+		function calculateAdjustedReturn() {
+			var totalReturn = parseFloat(document.getElementById("total-return").value) / 100;
+			var inflationRate = parseFloat(document.getElementById("inflation-rate").value) / 100;
+			var adjustedReturn = ((1 + totalReturn) / (1 + inflationRate)) - 1;
+			document.getElementById("adjusted-return").value = (adjustedReturn * 100).toLocaleString("id-ID", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + "%";
+		}
+
+		function calculate() {
+			var investment = parseFloat(document.getElementById("investment").value.replace(/\./g, '').replace(/,/g, '.'));
+			var rate = parseFloat(document.getElementById("rate").value) / 100;
+			var years = parseInt(document.getElementById("years").value);
+			var futureValue = investment * Math.pow(1 + rate, years);
+			var percentChange = ((futureValue - investment) / investment) * 100;
+			document.getElementById("result").value = futureValue.toLocaleString('id-ID', {minimumFractionDigits: 2});
+			document.getElementById("percent-change").value = percentChange.toFixed(2) + "%";
+		}
+
+		function formatNumber(input) {
+			var num = input.value.replace(/\./g, '').replace(/,/g, '.');
+			input.value = num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+		}
+
+		var nilaiCount = 2; // jumlah input nilai awal
+
+		function tambahNilai() {
+			nilaiCount++; // tambahkan jumlah input nilai
+
+			var nilaiContainer = document.getElementById("nilai-container");
+
+			var label = document.createElement("label");
+			label.setAttribute("for", "nilai" + nilaiCount);
+			label.innerHTML = "Nilai " + nilaiCount + ":";
+
+			var input = document.createElement("input");
+			input.setAttribute("type", "text");
+			input.setAttribute("id", "nilai" + nilaiCount);
+			input.setAttribute("name", "nilai" + nilaiCount);
+			input.setAttribute("onkeyup", "formatNumber(this)");
+
+			nilaiContainer.appendChild(label);
+			nilaiContainer.appendChild(input);
+			nilaiContainer.appendChild(document.createElement("br"));
+			nilaiContainer.appendChild(document.createElement("br"));
+		}
+
+		function hapusNilai() {
+			if (nilaiCount > 2) { // minimal harus ada dua input nilai
+				var nilaiContainer = document.getElementById("nilai-container");
+				var lastLabel = nilaiContainer.querySelector("label:last-of-type");
+				var lastInput = nilaiContainer.querySelector("input:last-of-type");
+
+				nilaiContainer.removeChild(lastLabel);
+				nilaiContainer.removeChild(lastInput);
+				nilaiContainer.removeChild(nilaiContainer.lastChild);
+				nilaiContainer.removeChild(nilaiContainer.lastChild);
+
+				nilaiCount--;
+			}
+		}
+
+		function hitungRata() {
+			var total = 0;
+
+			for (var i = 1; i <= nilaiCount; i++) {
+				var nilai = parseFloat(document.getElementById("nilai" + i).value.replace(/\./g, '').replace(',', '.'));
+
+				if (!isNaN(nilai)) {
+					total += nilai;
+				}
+			}
+
+			var rata = total / nilaiCount;
+
+			document.getElementById("hasil").value = formatNumber(rata.toFixed(2).replace('.', ','), ',', '.');
+		}
+
+		function formatNumber(input, decimalSeparator, thousandSeparator) {
+			if (input === '') return;
+
+			decimalSeparator = decimalSeparator || ',';
+			thousandSeparator = thousandSeparator || '.';
+
+			var parts = input.toString().split(decimalSeparator);
+			parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+
+			return parts.join(decimalSeparator);
+		}
+	</script>
+</body>
+</html>
