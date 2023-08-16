@@ -1,0 +1,4 @@
+{
+  "src": "/v1",
+  "dest": "/path/to/custom.js"
+}
