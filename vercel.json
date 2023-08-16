@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/v1/:path*", "destination": "/v1/:path*" }
+    { "source": "/v1/(.*)", "destination": "/v1/$1" },
+    { "source": "/(.*)", "destination": "/$1" }
   ]
 }
