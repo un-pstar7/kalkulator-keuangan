@@ -1,4 +1,5 @@
 {
-  "src": "/v1",
-  "dest": "/proxy.js"
+  "rewrites": [
+    { "source": "/v1/:path*", "destination": "/v1/:path*" }
+  ]
 }
