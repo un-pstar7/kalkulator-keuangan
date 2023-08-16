@@ -1,4 +1,4 @@
 {
   "src": "/v1",
-  "dest": "proxy.js"
+  "dest": "/proxy.js"
 }
