@@ -10,9 +10,9 @@
 	<h1>Investment Adjusted Return Calculator</h1>
 	<form>
 		<label for="total-return">Total Return (%):</label>
-		<input type="number" id="total-return" name="total-return" step="0.01" inputmode="numeric" onkeyup="formatNumber(this)"><br><br>
+		<input type="number" id="total-return" name="total-return" step="0.01" inputmode="numeric"><br><br>
 		<label for="inflation-rate">Inflation Rate (%):</label>
-		<input type="number" id="inflation-rate" name="inflation-rate" step="0.01" inputmode="numeric" onkeyup="formatNumber(this)"><br><br>
+		<input type="number" id="inflation-rate" name="inflation-rate" step="0.01" inputmode="numeric"><br><br>
 		<button type="button" onclick="calculateAdjustedReturn()">Calculate Adjusted Return</button><br><br>
 		<label for="adjusted-return">Investment Adjusted Return (%):</label>
 		<input type="text" id="adjusted-return" name="adjusted-return" readonly>
@@ -25,10 +25,10 @@
 		<input type="text" id="investment" name="investment" onkeyup="formatNumber(this)" required inputmode="numeric"><br><br>
 
 		<label for="rate">Annual Interest Rate:</label>
-		<input type="number" id="rate" name="rate" required inputmode="numeric" onkeyup="formatNumber(this)"><span>%</span><br><br>
+		<input type="number" id="rate" name="rate" required inputmode="numeric"><span>%</span><br><br>
 
 		<label for="years">Number of Years:</label>
-		<input type="number" id="years" name="years" required inputmode="numeric" onkeyup="formatNumber(this)"><br><br>
+		<input type="number" id="years" name="years" required inputmode="numeric"><br><br>
 
 		<button type="button" onclick="calculate()">Calculate</button><br><br>
 
@@ -143,9 +143,16 @@
 			document.getElementById("hasil").value = formatNumber(rata.toFixed(2).replace('.', ','), ',', '.');
 		}
 
-		function formatNumber(input) {
-			var num = input.value.replace(/\./g, '').replace(/,/g, '.');
-			input.value = num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+		function formatNumber(input, decimalSeparator, thousandSeparator) {
+			if (input === '') return;
+
+			decimalSeparator = decimalSeparator || ',';
+			thousandSeparator = thousandSeparator || '.';
+
+			var parts = input.toString().split(decimalSeparator);
+			parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
+
+			return parts.join(decimalSeparator);
 		}
 	</script>
 </body>
