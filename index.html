@@ -10,9 +10,9 @@
 	<h1>Investment Adjusted Return Calculator</h1>
 	<form>
 		<label for="total-return">Total Return (%):</label>
-		<input type="number" id="total-return" name="total-return" step="0.01"><br><br>
+		<input type="number" id="total-return" name="total-return" step="0.01" inputmode="numeric" onkeyup="formatNumber(this)"><br><br>
 		<label for="inflation-rate">Inflation Rate (%):</label>
-		<input type="number" id="inflation-rate" name="inflation-rate" step="0.01"><br><br>
+		<input type="number" id="inflation-rate" name="inflation-rate" step="0.01" inputmode="numeric" onkeyup="formatNumber(this)"><br><br>
 		<button type="button" onclick="calculateAdjustedReturn()">Calculate Adjusted Return</button><br><br>
 		<label for="adjusted-return">Investment Adjusted Return (%):</label>
 		<input type="text" id="adjusted-return" name="adjusted-return" readonly>
@@ -22,13 +22,13 @@
 
 	<form>
 		<label for="investment">Investment Amount:</label>
-		<input type="text" id="investment" name="investment" onkeyup="formatNumber(this)" required><br><br>
+		<input type="text" id="investment" name="investment" onkeyup="formatNumber(this)" required inputmode="numeric"><br><br>
 
 		<label for="rate">Annual Interest Rate:</label>
-		<input type="number" id="rate" name="rate" required><span>%</span><br><br>
+		<input type="number" id="rate" name="rate" required inputmode="numeric" onkeyup="formatNumber(this)"><span>%</span><br><br>
 
 		<label for="years">Number of Years:</label>
-		<input type="number" id="years" name="years" required><br><br>
+		<input type="number" id="years" name="years" required inputmode="numeric" onkeyup="formatNumber(this)"><br><br>
 
 		<button type="button" onclick="calculate()">Calculate</button><br><br>
 
@@ -44,10 +44,10 @@
 	<form>
 		<div id="nilai-container">
 			<label for="nilai1">Nilai 1:</label>
-			<input type="text" id="nilai1" name="nilai1" onkeyup="formatNumber(this)"><br><br>
+			<input type="text" id="nilai1" name="nilai1" onkeyup="formatNumber(this)" inputmode="numeric"><br><br>
 
 			<label for="nilai2">Nilai 2:</label>
-			<input type="text" id="nilai2" name="nilai2" onkeyup="formatNumber(this)"><br><br>
+			<input type="text" id="nilai2" name="nilai2" onkeyup="formatNumber(this)" inputmode="numeric"><br><br>
 		</div>
 
 		<button type="button" onclick="tambahNilai()">Tambah Nilai</button>
@@ -104,6 +104,7 @@
 			input.setAttribute("id", "nilai" + nilaiCount);
 			input.setAttribute("name", "nilai" + nilaiCount);
 			input.setAttribute("onkeyup", "formatNumber(this)");
+			input.setAttribute("inputmode", "numeric");
 
 			nilaiContainer.appendChild(label);
 			nilaiContainer.appendChild(input);
@@ -142,16 +143,9 @@
 			document.getElementById("hasil").value = formatNumber(rata.toFixed(2).replace('.', ','), ',', '.');
 		}
 
-		function formatNumber(input, decimalSeparator, thousandSeparator) {
-			if (input === '') return;
-
-			decimalSeparator = decimalSeparator || ',';
-			thousandSeparator = thousandSeparator || '.';
-
-			var parts = input.toString().split(decimalSeparator);
-			parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSeparator);
-
-			return parts.join(decimalSeparator);
+		function formatNumber(input) {
+			var num = input.value.replace(/\./g, '').replace(/,/g, '.');
+			input.value = num.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 		}
 	</script>
 </body>
